@@ -1,6 +1,10 @@
 # 🧪 llm-stress-tester
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Probe-Hallucination_Traps and Jailbreak_Resistance-navy" />
+  <img src="https://img.shields.io/badge/Evaluates-Robustness-sage" />
 
+</p>
 
 A framework to evaluate how open-source language models handle adversarial prompts. Tests across hallucination traps and jailbreak scenarios.
 
