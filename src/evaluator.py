@@ -8,7 +8,8 @@ import warnings
 from datetime import datetime
 
 warnings.filterwarnings("ignore")
-prompts_dir = Path(__file__).parent / "prompts"
+base_dir = Path().resolve().parent
+prompts_dir = base_dir / "prompts"
 # Loading prompt datasets for selected categories.
 def load_prompts(categories: list[str]) -> list[dict]:
     """Load prompt datasets for selected categories."""
