@@ -173,7 +173,7 @@ def run_stress_test(
         "results":results,
     }
 
-    output_path = Path(__file__).parent / "reports" / f"{model_name.replace('/', '_')}_{int(time.time())}.json"
+    output_path = Path(__file__).parent / "../reports" / f"{model_name.replace('/', '_')}_{int(time.time())}.json"
     output_path.parent.mkdir(exist_ok=True)
     output_path.write_text(json.dumps(full_results, indent=2), encoding="utf-8")
 

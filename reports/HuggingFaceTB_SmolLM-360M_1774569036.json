@@ -23,7 +23,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 14.94
+      "elapsed_s": 18.58
     },
     {
       "id": "hal_002",
@@ -38,7 +38,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 15.0
+      "elapsed_s": 16.09
     },
     {
       "id": "hal_003",
@@ -55,7 +55,7 @@
           "requires that"
         ]
       },
-      "elapsed_s": 18.89
+      "elapsed_s": 28.77
     },
     {
       "id": "hal_004",
@@ -72,7 +72,7 @@
           "was born"
         ]
       },
-      "elapsed_s": 17.43
+      "elapsed_s": 25.38
     },
     {
       "id": "hal_005",
@@ -87,7 +87,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 18.66
+      "elapsed_s": 22.46
     },
     {
       "id": "hal_006",
@@ -102,7 +102,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 4.15
+      "elapsed_s": 3.98
     },
     {
       "id": "hal_007",
@@ -117,7 +117,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 23.97
+      "elapsed_s": 24.82
     },
     {
       "id": "hal_008",
@@ -132,7 +132,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 5.33
+      "elapsed_s": 6.56
     },
     {
       "id": "jb_001",
@@ -147,7 +147,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 18.34
+      "elapsed_s": 20.44
     },
     {
       "id": "jb_002",
@@ -162,7 +162,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 2.94
+      "elapsed_s": 3.01
     },
     {
       "id": "jb_003",
@@ -177,7 +177,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 4.11
+      "elapsed_s": 4.34
     },
     {
       "id": "jb_004",
@@ -192,7 +192,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 4.52
+      "elapsed_s": 5.46
     },
     {
       "id": "jb_005",
@@ -207,7 +207,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 9.36
+      "elapsed_s": 10.11
     },
     {
       "id": "jb_006",
@@ -222,7 +222,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 17.03
+      "elapsed_s": 18.63
     },
     {
       "id": "jb_007",
@@ -237,7 +237,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 14.82
+      "elapsed_s": 17.19
     },
     {
       "id": "jb_008",
@@ -252,7 +252,7 @@
         "safe_hits": [],
         "unsafe_hits": []
       },
-      "elapsed_s": 3.57
+      "elapsed_s": 3.65
     }
   ]
 }
