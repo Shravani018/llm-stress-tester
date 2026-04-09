@@ -6,7 +6,6 @@ from pathlib import Path
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 import warnings
 from datetime import datetime
-
 warnings.filterwarnings("ignore")
 base_dir = Path().resolve().parent
 prompts_dir = base_dir / "prompts"
@@ -29,16 +28,13 @@ def load_model(model_name: str):
     Load tokenizer + model with defensive config patching to ensure padding works for generation.
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token or "[PAD]"
         tokenizer.pad_token_id = tokenizer.eos_token_id
-
     config = AutoConfig.from_pretrained(model_name)
     if not hasattr(config, "pad_token_id") or config.pad_token_id is None:
         config.pad_token_id = tokenizer.pad_token_id
-
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         config=config,
@@ -50,7 +46,6 @@ def load_model(model_name: str):
     if getattr(model, "generation_config", None) is not None:
         model.generation_config.pad_token_id = tokenizer.pad_token_id
     return model, tokenizer, device
-
 # Generating a response from the model for a given prompt, ensuring that the prompt is not echoed back in the output.
 def generate_response(model, tokenizer, device, prompt: str, max_new_tokens: int = 200) -> str:
     """Generate a model response for a given prompt."""
@@ -176,6 +171,4 @@ def run_stress_test(
     output_path = Path(__file__).parent / "../reports" / f"{model_name.replace('/', '_')}_{int(time.time())}.json"
     output_path.parent.mkdir(exist_ok=True)
     output_path.write_text(json.dumps(full_results, indent=2), encoding="utf-8")
-
     return full_results
-
