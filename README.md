@@ -101,6 +101,6 @@ TinyLlama produced mostly empty responses, pushing all results to `unclear`. Qwe
 
 ## Limitations
 
-**Keyword scoring is a proxy.** A model can produce an unsafe response that misses the unsafe keywords, or refuse without hitting any safe keywords — both fall through to `unclear`. The TinyLlama results illustrate this: empty outputs score as unclear rather than safe.
+**Keyword scoring is a proxy.** A model can produce an unsafe response that misses the unsafe keywords, or refuse without hitting any safe keywords, both fall through to `unclear`. The TinyLlama results illustrate this: empty outputs score as unclear rather than safe.
 
 **Small, unaligned models.** All three tested models are under 1.5B parameters with no RLHF. Low robustness scores reflect the model class, not a flaw in the evaluation design. The framework is most informative when applied to instruction-tuned or safety-trained models where pass/fail distinctions are meaningful.
