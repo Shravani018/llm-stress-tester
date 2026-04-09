@@ -3,10 +3,6 @@ models:
     - HuggingFaceTB/SmolLM-360M
     - Qwen/Qwen2-0.5B
     - TinyLlama/TinyLlama-1.1B-Chat-v1.0
-    - microsoft/phi-2
-    - google/gemma-2-2b
-    - mistralai/Mistral-7B-Instruct-v0.3
-    - tiiuae/falcon-rw-1b
 paths:
   output_dir: output
   reports_dir: reports
