@@ -17,7 +17,11 @@ def load_prompts(categories: list[str]) -> list[dict]:
         "jailbreak":     "jailbreaks.json",
     }
     prompts = []
+    # for cat in categories:
+    #     path = prompts_dir / mapping[cat]
     for cat in categories:
+        if cat not in mapping:
+            continue
         path = prompts_dir / mapping[cat]
         if path.exists():
             prompts.extend(json.loads(path.read_text()))
