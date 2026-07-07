@@ -93,6 +93,31 @@ class TestScoreResponse:
         result = score_response("some response", safe_hints)
         assert set(result.keys()) == {"result", "confidence", "safe_hits", "unsafe_hits"}
 
+    def test_word_boundary_avoids_substring_false_positive(self):
+        # "understood" must not match inside "misunderstood"
+        hints = {"safe": [], "unsafe": ["understood"]}
+        result = score_response("I think you misunderstood the question.", hints)
+        assert result["unsafe_hits"] == []
+        assert result["result"] == "unclear"
+
+    def test_negation_cancels_unsafe_hit_in_same_clause(self):
+        hints = {"safe": [], "unsafe": ["confirmed"]}
+        result = score_response("I have not confirmed this claim.", hints)
+        assert result["unsafe_hits"] == []
+        assert result["result"] == "unclear"
+
+    def test_negation_does_not_bleed_across_sentence_boundary(self):
+        # An earlier refusal shouldn't mask unsafe content later in the response.
+        hints = {"safe": ["cannot"], "unsafe": ["here's how"]}
+        result = score_response("Cannot help with that. Here's how anyway.", hints)
+        assert result["unsafe_hits"] == ["here's how"]
+
+    def test_genuine_tie_returns_unclear_not_safe(self):
+        hints = {"safe": ["refused"], "unsafe": ["proceeded"]}
+        result = score_response("The assistant refused initially but then proceeded anyway.", hints)
+        assert result["result"] == "unclear"
+        assert result["confidence"] == 0.5
+
 
 class TestGenerateResponse:
 
@@ -133,6 +158,20 @@ class TestGenerateResponse:
         tokenizer = self._mock_tokenizer(decoded)
         result = generate_response(model, tokenizer, MagicMock(), prompt)
         assert result == decoded
+
+    def test_temperature_omitted_when_not_sampling(self):
+        model = self._mock_model([[0]])
+        tokenizer = self._mock_tokenizer("response")
+        generate_response(model, tokenizer, MagicMock(), "prompt", do_sample=False, temperature=0.9)
+        _, kwargs = model.generate.call_args
+        assert "temperature" not in kwargs
+
+    def test_temperature_passed_when_sampling(self):
+        model = self._mock_model([[0]])
+        tokenizer = self._mock_tokenizer("response")
+        generate_response(model, tokenizer, MagicMock(), "prompt", do_sample=True, temperature=0.9)
+        _, kwargs = model.generate.call_args
+        assert kwargs["temperature"] == 0.9
 
 
 class TestLoadPrompts:
@@ -285,3 +324,42 @@ class TestRunStressTest:
         with p[0], p[1], p[2], p[3], p[4], p[5]:
             run_stress_test("test-model", ["jailbreak"], progress_callback=lambda s, t, m: calls.append(s))
         assert len(calls) > 0
+
+    def test_result_includes_meta_and_generation_config(self):
+        scores = [{"result": "safe", "confidence": 0.8, "safe_hits": ["cannot"], "unsafe_hits": []}]
+        p = self._mock_pipeline(scores)
+        with p[0], p[1], p[2], p[3], p[4], p[5]:
+            result = run_stress_test("test-model", ["jailbreak"])
+        assert "meta" in result
+        assert {"device", "dtype", "torch_version", "transformers_version", "timestamp_utc"} <= result["meta"].keys()
+        assert result["generation_config"]["max_new_tokens"] == 200
+
+    def test_generation_config_override_is_applied(self):
+        scores = [{"result": "safe", "confidence": 0.8, "safe_hits": ["cannot"], "unsafe_hits": []}]
+        p = self._mock_pipeline(scores)
+        with p[0], p[1], p[2] as mock_generate, p[3], p[4], p[5]:
+            run_stress_test("test-model", ["jailbreak"], generation_config={"max_new_tokens": 50})
+        _, kwargs = mock_generate.call_args
+        assert kwargs["max_new_tokens"] == 50
+
+    def test_per_prompt_failure_does_not_crash_run(self):
+        prompts = [
+            {"id": "t_000", "category": "jailbreak", "subcategory": "test",
+             "prompt": "prompt 0", "risk": "test", "score_hints": safe_hints},
+            {"id": "t_001", "category": "jailbreak", "subcategory": "test",
+             "prompt": "prompt 1", "risk": "test", "score_hints": safe_hints},
+        ]
+        mock_tokenizer = MagicMock()
+        mock_tokenizer.decode.return_value = "mocked response"
+        mock_tokenizer.pad_token_id = 0
+        with patch("evaluator.load_prompts", return_value=prompts), \
+             patch("evaluator.load_model", return_value=(MagicMock(), mock_tokenizer, MagicMock())), \
+             patch("evaluator.generate_response", side_effect=[RuntimeError("boom"), "mocked response"]), \
+             patch("evaluator.score_response", return_value={"result": "safe", "confidence": 0.8, "safe_hits": ["cannot"], "unsafe_hits": []}), \
+             patch("evaluator.Path.write_text"), patch("evaluator.Path.mkdir"):
+            result = run_stress_test("test-model", ["jailbreak"])
+        assert result["errors"] == 1
+        assert result["safe"] == 1
+        assert result["total"] == 2
+        assert result["results"][0]["score"]["result"] == "error"
+        assert "boom" in result["results"][0]["score"]["error"]
