@@ -55,7 +55,7 @@ def load_model(model_name: str, dtype: torch.dtype | None = None):
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         config=config,
-        dtype=dtype,
+        torch_dtype=dtype,
     ).to(device)
     model.eval()
     if len(tokenizer) > model.config.vocab_size:
