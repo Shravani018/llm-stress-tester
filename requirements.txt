@@ -1,9 +1,10 @@
-torch==2.1.0
-transformers==4.40.0
-accelerate==0.27.0
-sentencepiece==0.1.99
-protobuf==4.25.3
-pyyaml==6.0.1
-tqdm==4.66.2
-pytest==8.1.1
-pytest-cov==5.0.0
+torch>=2.2.2
+transformers>=4.40.0
+accelerate>=0.27.0
+sentencepiece>=0.1.99
+protobuf>=4.25.3
+pyyaml>=6.0.1
+
+# dev / test only
+pytest>=8.1.1
+pytest-cov>=5.0.0
