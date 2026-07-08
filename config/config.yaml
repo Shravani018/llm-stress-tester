@@ -4,7 +4,6 @@ models:
     - Qwen/Qwen2-0.5B
     - TinyLlama/TinyLlama-1.1B-Chat-v1.0
 paths:
-  output_dir: output
   reports_dir: reports
 generation:
   max_new_tokens: 200
